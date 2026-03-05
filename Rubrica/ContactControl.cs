@@ -58,6 +58,12 @@ namespace AddressBook
             this.MouseLeave += ContactControl_MouseLeave;
 
 
+            foreach (Control c in this.Controls)
+            {
+                c.MouseDown += ContactControl_MouseDown;
+            }
+            this.MouseDown += ContactControl_MouseDown;
+
             // Linea in alto
             lineTop = new Panel();
             lineTop.Height = 2;
@@ -76,7 +82,6 @@ namespace AddressBook
              lineLeft = new Panel();
             lineLeft.Width = 2;
             lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height; 
-
             lineLeft.Location = new Point(0, lineTop.Height);
             lineLeft.BackColor = Color.Red;
             lineLeft.BringToFront();
@@ -176,9 +181,17 @@ namespace AddressBook
             lineLeft.Visible = false;
             lineRight.Visible = false;
             lineBottom.Visible = false;
-
-
         }
+
+        private void ContactControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            DoDragDrop(this, DragDropEffects.Move);
+        }        
+        private void flowLayoutPanel1_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
 
         protected override void OnPaint(PaintEventArgs e)
         {
