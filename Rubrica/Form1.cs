@@ -1,12 +1,9 @@
-﻿using System;
+﻿using Rubrica;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace AddressBook
 {
@@ -14,45 +11,84 @@ namespace AddressBook
     {
         private List<Contact> contacts;
         private FlowLayoutPanel flowLayoutPanel;
+
+
         public Form1()
         {
             InitializeComponent();
+            this.AutoScroll = true;
+
 
             flowLayoutPanel = new FlowLayoutPanel();
-            flowLayoutPanel.Dock = DockStyle.Top;
             flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel.Name = "FlowLayoutPanel1";
-            flowLayoutPanel.AutoSize = true; 
-            flowLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
+            flowLayoutPanel.AutoSize = false;
+            flowLayoutPanel.Dock = DockStyle.Fill;   // not Top
+            this.Size = new Size(400, 400);
+            this.MinimumSize = new Size(400, 400);
             flowLayoutPanel.TabIndex = 0;
             flowLayoutPanel.WrapContents = false;                   //necessary, otherwise Windows tries to wrap into a new column
             flowLayoutPanel.AutoScroll = true;
             flowLayoutPanel.BackColor = Color.AliceBlue;
+            
+            flowLayoutPanel.Resize += (s, e) =>
+            {
+                foreach (Control c in flowLayoutPanel.Controls)
+                {
+                    if(typeof(ContactControl).IsInstanceOfType(c)){
+                        ContactControl c1 = (ContactControl)c;
+                        c1.LineRight.Location = new Point(c1.Width - 3, 0);
+                        c1.LineRight.Height = Height;
+                        c1.Width = flowLayoutPanel.ClientSize.Width - c1.Margin.Horizontal;
+                    }
+                }
+            };
+
 
             //Once the FlowLayoutPanel control is ready with its properties, the next step is to add the FlowLayoutPanel to a Form
             this.Controls.Add(flowLayoutPanel);
 
-
-
             Contact contact1 = new Contact("11111113333333", "", "Alfonso", "anz@45.it", "pass");
-            ContactControl contactControl1 = new ContactControl(contact1);
+            ContactControl contactControl1 = new ContactControl(flowLayoutPanel, contact1);
 
             Contact contact2 = new Contact("2222222", "", "Fabio", "anz@45.it", "pass");
-            ContactControl contactControl2 = new ContactControl(contact2);
+            ContactControl contactControl2 = new ContactControl(flowLayoutPanel, contact2);
 
             Contact contact3 = new Contact("3333333", "", "Aniello", "anz@45.it", "pass");
-            ContactControl contactControl3 = new ContactControl(contact3);
-
-            Contact contact4 = new Contact("44444444", "", "Silvia", "anz@45.it", "pass");
-            ContactControl contactControl4 = new ContactControl(contact4);
+            ContactControl contactControl3 = new ContactControl(flowLayoutPanel, contact3);
 
             flowLayoutPanel.Controls.Add(contactControl1);
             flowLayoutPanel.Controls.Add(contactControl2);
             flowLayoutPanel.Controls.Add(contactControl3);
-            flowLayoutPanel.Controls.Add(contactControl4);
+
+            //contactControl1.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
+            //contactControl2.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
+            //contactControl3.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
+
+
+
+
+            addToptMenu();
+           
+        }
+        private void addToptMenu()
+        {
+            TopMenu topMenu = new TopMenu(flowLayoutPanel);
+            
+            // Add menuStrip to form
+            this.MainMenuStrip = topMenu.MenuStrip;
+            this.Controls.Add(topMenu.MenuStrip);
         }
 
+
+        private void addConcat(string number, string filePic, string name, string email, string password) {
+            Contact contact = new Contact(number, filePic, name, email, password);
+            ContactControl contactControl = new ContactControl(flowLayoutPanel, contact);
+
+            flowLayoutPanel.Controls.Add(contactControl);
+            //contactControl.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
+
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {

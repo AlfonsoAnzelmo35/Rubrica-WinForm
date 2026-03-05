@@ -17,9 +17,15 @@ namespace AddressBook
             set { contactImageWidth = value; }
         }
         private String number { get; set; }
-        private User user { get; set; }
+        public String Number
+        {
+            get { return number; }
+            set { number = value; }
+        }
 
-
+        public User user;
+        
+        
         private string profilePic;   
         public string ProfilePic     
         {
