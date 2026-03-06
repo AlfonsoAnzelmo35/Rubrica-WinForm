@@ -51,12 +51,11 @@ namespace AddressBook
             this.contact1 = contact;
             this.flowLayoutPanel = flowLayoutPanel;
             this.BorderStyle = BorderStyle.FixedSingle;
-            this.Margin = new Padding(25);
+            
             this.Height = 100;
             this.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
             this.MouseEnter += ContactControl_MouseEnter;
             this.MouseLeave += ContactControl_MouseLeave;
-
 
             foreach (Control c in this.Controls)
             {
@@ -64,6 +63,16 @@ namespace AddressBook
             }
             this.MouseDown += ContactControl_MouseDown;
 
+        
+            EnableDrag(this);
+            createControls();
+            createLabels();
+            createBorders();
+
+        }
+        
+        private void createBorders()
+        {
             // Linea in alto
             lineTop = new Panel();
             lineTop.Height = 2;
@@ -72,34 +81,29 @@ namespace AddressBook
             lineTop.BringToFront();
 
             // Linea in basso
-             lineBottom = new Panel();
+            lineBottom = new Panel();
             lineBottom.Height = 2;
             lineBottom.Dock = DockStyle.Bottom;
             lineBottom.BackColor = Color.Black;
             lineBottom.BringToFront();
 
             // Linea a sinistra
-             lineLeft = new Panel();
+            lineLeft = new Panel();
             lineLeft.Width = 2;
-            lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height; 
+            lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height;
             lineLeft.Location = new Point(0, lineTop.Height);
             lineLeft.BackColor = Color.Red;
             lineLeft.BringToFront();
 
             // Linea a destra
-             lineRight = new Panel();
+            lineRight = new Panel();
             lineRight.Width = 2;
-            lineRight.Height = this.Height - lineTop.Height - lineBottom.Height; 
-            lineRight.Location = new Point(this.Width -10, lineTop.Height);
+            lineRight.Height = this.Height - lineTop.Height - lineBottom.Height;
+            lineRight.Location = new Point(this.Width - 10, lineTop.Height);
             lineRight.BackColor = Color.Blue;
             lineRight.BringToFront();
-            EnableDrag(this);
 
-            createControls();
-            createLabels();
         }
-        
-
         private void createControls()
         {
             pic = ShowMyImage.ShowImage(contact1.ProfilePic);
@@ -108,7 +112,6 @@ namespace AddressBook
             //textBox = ShowMyImage.createTextBox();
             //Controls.Add(textBox);
 
-            //ShowMyImage.createBackControl() //for shadows
 
         }
         //public void createBackControl() { 
