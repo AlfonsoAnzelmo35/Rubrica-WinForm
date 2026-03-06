@@ -90,7 +90,7 @@ namespace AddressBook
              lineRight = new Panel();
             lineRight.Width = 2;
             lineRight.Height = this.Height - lineTop.Height - lineBottom.Height; 
-            lineRight.Location = new Point(this.Width -20, lineTop.Height);
+            lineRight.Location = new Point(this.Width -10, lineTop.Height);
             lineRight.BackColor = Color.Blue;
             lineRight.BringToFront();
             EnableDrag(this);
