@@ -25,8 +25,8 @@ namespace AddressBook
             flowLayoutPanel.AutoSize = false;
             flowLayoutPanel.Dock = DockStyle.Fill;   // not Top
             flowLayoutPanel.AllowDrop = true;
-            flowLayoutPanel.DragDrop += flowLayoutPanel_DragDrop;
             flowLayoutPanel.DragOver += flowLayoutPanel_DragOver;
+            flowLayoutPanel.DragDrop += flowLayoutPanel_DragDrop;
 
 
 
@@ -88,34 +88,23 @@ namespace AddressBook
 
         private void flowLayoutPanel_DragDrop(object sender, DragEventArgs e)
         {
-            Control dragged = (Control)e.Data.GetData(typeof(Control));
+            ContactControl dragged = e.Data.GetData(typeof(ContactControl)) as ContactControl;
             if (dragged == null) return;
 
-            Point mousePos = flowLayoutPanel.PointToClient(new Point(e.X, e.Y));
+            Point p = flowLayoutPanel.PointToClient(new Point(e.X, e.Y));
+            Control target = flowLayoutPanel.GetChildAtPoint(p);
 
-            // Calcolo il nuovo indice basato sulla posizione verticale del mouse
-            int newIndex = 0;
-            for (int i = 0; i < flowLayoutPanel.Controls.Count; i++)
-            {
-                Control c = flowLayoutPanel.Controls[i];
-                if (c == dragged) continue; // salto il controllo trascinato
-                if (mousePos.Y > c.Top + c.Height / 2)
-                    newIndex = i + 1;
-            }
+            if (target == null || target == dragged) return;
 
-            // Se l’indice non cambia, non faccio nulla
-            int oldIndex = flowLayoutPanel.Controls.GetChildIndex(dragged);
-            if (oldIndex == newIndex) return;
-
-            // Sposto il controllo nella nuova posizione
-            flowLayoutPanel.SuspendLayout();
-            flowLayoutPanel.Controls.SetChildIndex(dragged, newIndex);
-            flowLayoutPanel.ResumeLayout();
+            int index = flowLayoutPanel.Controls.GetChildIndex(target);
+            flowLayoutPanel.Controls.SetChildIndex(dragged, index);
         }
+
         private void flowLayoutPanel_DragOver(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Move;
         }
+
         private void addConcat(string number, string filePic, string name, string email, string password) {
             Contact contact = new Contact(number, filePic, name, email, password);
             ContactControl contactControl = new ContactControl(flowLayoutPanel, contact);

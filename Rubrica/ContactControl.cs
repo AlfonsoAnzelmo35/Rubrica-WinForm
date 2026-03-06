@@ -93,6 +93,7 @@ namespace AddressBook
             lineRight.Location = new Point(this.Width -20, lineTop.Height);
             lineRight.BackColor = Color.Blue;
             lineRight.BringToFront();
+            EnableDrag(this);
 
             createControls();
             createLabels();
@@ -191,7 +192,15 @@ namespace AddressBook
         {
             e.Effect = DragDropEffects.Move;
         }
+        private void EnableDrag(Control parent)
+        {
+            parent.MouseDown += ContactControl_MouseDown;
 
+            foreach (Control c in parent.Controls)
+            {
+                EnableDrag(c);
+            }
+        }
 
         protected override void OnPaint(PaintEventArgs e)
         {
