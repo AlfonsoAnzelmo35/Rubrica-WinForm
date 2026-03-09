@@ -11,13 +11,13 @@ namespace AddressBook
     {
         private List<Contact> contacts;
         private FlowLayoutPanel flowLayoutPanel;
+        private ContactControlWrapper contactControlWrapper;
 
 
         public Form1()
         {
             InitializeComponent();
             this.AutoScroll = true;
-
 
             flowLayoutPanel = new FlowLayoutPanel();
             flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
@@ -29,11 +29,10 @@ namespace AddressBook
             flowLayoutPanel.DragDrop += flowLayoutPanel_DragDrop;
 
 
-
             this.Size = new Size(400, 400);
             this.MinimumSize = new Size(400, 400);
             flowLayoutPanel.TabIndex = 0;
-            flowLayoutPanel.WrapContents = false;                   //necessary, otherwise Windows tries to wrap into a new column
+            flowLayoutPanel.WrapContents = false;                  
             flowLayoutPanel.AutoScroll = true;
             flowLayoutPanel.BackColor = Color.AliceBlue;
             
@@ -50,29 +49,22 @@ namespace AddressBook
                 }
             };
 
-
             //Once the FlowLayoutPanel control is ready with its properties, the next step is to add the FlowLayoutPanel to a Form
             this.Controls.Add(flowLayoutPanel);
+            contactControlWrapper = new ContactControlWrapper();
 
             Contact contact1 = new Contact("11111113333333", "", "Alfonso", "anz@45.it", "pass");
-            ContactControl contactControl1 = new ContactControl(flowLayoutPanel, contact1);
+            ContactControl contactControl1 = new ContactControl(flowLayoutPanel, contact1, contactControlWrapper);
 
             Contact contact2 = new Contact("2222222", "", "Fabio", "anz@45.it", "pass");
-            ContactControl contactControl2 = new ContactControl(flowLayoutPanel, contact2);
+            ContactControl contactControl2 = new ContactControl(flowLayoutPanel, contact2, contactControlWrapper);
 
             Contact contact3 = new Contact("3333333", "", "Aniello", "anz@45.it", "pass");
-            ContactControl contactControl3 = new ContactControl(flowLayoutPanel, contact3);
+            ContactControl contactControl3 = new ContactControl(flowLayoutPanel, contact3, contactControlWrapper);
 
-            flowLayoutPanel.Controls.Add(contactControl1);
-            flowLayoutPanel.Controls.Add(contactControl2);
-            flowLayoutPanel.Controls.Add(contactControl3);
-
-            //contactControl1.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
-            //contactControl2.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
-            //contactControl3.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
-
-
-
+            contactControlWrapper.addConcatControl(contactControl1, flowLayoutPanel);
+            contactControlWrapper.addConcatControl(contactControl2, flowLayoutPanel);
+            contactControlWrapper.addConcatControl(contactControl3, flowLayoutPanel);
 
             addToptMenu();
            
@@ -105,14 +97,8 @@ namespace AddressBook
             e.Effect = DragDropEffects.Move;
         }
 
-        private void addConcat(string number, string filePic, string name, string email, string password) {
-            Contact contact = new Contact(number, filePic, name, email, password);
-            ContactControl contactControl = new ContactControl(flowLayoutPanel, contact);
 
-            flowLayoutPanel.Controls.Add(contactControl);
-            //contactControl.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
-
-        }
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {

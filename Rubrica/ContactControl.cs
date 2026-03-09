@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Rubrica;
+using System;
+using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using static System.Windows.Forms.LinkLabel;
 
@@ -9,10 +12,12 @@ namespace AddressBook
     {
         private FlowLayoutPanel flowLayoutPanel;
         private TextBox textBox;
-        private PictureBox pic;
+        private PictureBox profilePic, removePic;
         private Label lblName, lblEmail, lblNumber;
-        Panel lineTop { get; set; } 
+        private string removeContactImage = "";
+        private ContactControlWrapper contactControlWrapper;
 
+        Panel lineTop { get; set; } 
         Panel lineLeft { get; set; }
         Panel lineRight { get; set; }
         public 
@@ -46,9 +51,10 @@ namespace AddressBook
             set { contactControlWidth = value; }
         }
 
-        public ContactControl(FlowLayoutPanel flowLayoutPanel, Contact contact )
+        public ContactControl(FlowLayoutPanel flowLayoutPanel, Contact contact, ContactControlWrapper contactControlWrapper)
         {
             this.contact1 = contact;
+            this.contactControlWrapper = contactControlWrapper;
             this.flowLayoutPanel = flowLayoutPanel;
             this.BorderStyle = BorderStyle.FixedSingle;
             
@@ -63,14 +69,25 @@ namespace AddressBook
             }
             this.MouseDown += ContactControl_MouseDown;
 
-        
+            
             EnableDrag(this);
-            createControls();
+            profilePic = addImage(profilePic, contact1.ProfilePic);
             createLabels();
             createBorders();
 
+            removePic = addImage(removePic, Path.GetFullPath(Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory, @"..\..\images\cestino.png")));
+            removePic.Dock = DockStyle.Right;
+            removePic.Height = 50;removePic.Width= 50;
+            removePic.Click += ((s, e) =>
+            {
+                Console.WriteLine("clicked remvove button" + this.ToString());
+                this.contactControlWrapper.removeContactControl(this);
+            });
+
+
         }
-        
+
         private void createBorders()
         {
             // Linea in alto
@@ -104,25 +121,29 @@ namespace AddressBook
             lineRight.BringToFront();
 
         }
-        private void createControls()
+        private PictureBox addImage(PictureBox pic, string profilePic)
         {
-            pic = ShowMyImage.ShowImage(contact1.ProfilePic);
+            pic = ShowMyImage.ShowImage(profilePic);
             Controls.Add(pic);
-
-            //textBox = ShowMyImage.createTextBox();
-            //Controls.Add(textBox);
-
-
+            return pic;
         }
-        //public void createBackControl() { 
-        //    ContactControl contactControl = new ContactControl();
-        //    
-        //}
+        private void removeImage(PictureBox pic)
+        {  
+            Controls.Remove(pic);
+        }
+        private void removeLabel(Label label)
+        {
+            Controls.Remove(label);    
+        }
+        private void removeBorder(Panel line)
+        {
+            Controls.Remove(line);
+        }
 
         public void createLabels()
         {
-            int textX = pic.Right + 10;
-            int textY = pic.Top;
+            int textX = profilePic.Right + 10;
+            int textY = profilePic.Top;
 
             lblName = new Label();
             lblName.Text = contact1.user.username;
@@ -144,22 +165,8 @@ namespace AddressBook
             lblNumber.AutoSize = true;
             lblNumber.Location = new Point(textX + 120, textY);
             Controls.Add(lblNumber);
-
         }
-        private void CenterContent()
-        {
-            int contentWidth = pic.Width + 10 + textBox.Width;
-            int contentHeight = Math.Max(pic.Height, textBox.Height);
-
-            int startX = (this.Width ) / 2;
-            int startY = (this.Height ) / 2;
-
-            Console.WriteLine("" + contentWidth + " " + contentHeight);
-            Console.WriteLine("" + startX + " " + startY);
-
-            //textBox.Location = new Point(startX + pic.Width + 10, startY + (pic.Height - textBox.Height) / 2);
-        }
-
+        
         private void ContactControl_MouseEnter(object sender, EventArgs e)
         {
             if (!Controls.Contains(lineTop))
@@ -210,7 +217,12 @@ namespace AddressBook
             base.OnPaint(e);
             
         }
-
+        public void removeMySelf()
+        {
+            //fa rifermento al flowLayoutPanel
+            this.Parent.Controls.Remove(this);
+            this.Dispose();
+        }
 
         private void InitializeComponent()
         {

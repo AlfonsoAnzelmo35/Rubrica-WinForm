@@ -50,6 +50,7 @@
     <Compile Include="ContactControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="ContactControlWrapper.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="images\cestino.png" />
+    <Content Include="images\User_icon_2.svg.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -47,27 +47,27 @@ namespace Rubrica
 
             menuStrip.Items.Add(contactsMenu);
 
-            addEvents();
+            //addEvents();
         }
 
 
-        public void addEvents()
+        /*public void addEvents()
         {
             addItem.Click += AddItem_Click;
         
         
         }
 
-        private void AddItem_Click(object sender, EventArgs e)
+        /*private void AddItem_Click(object sender, EventArgs e)
         {
             Console.WriteLine("add contact was clicked");
 
             Contact contact = new Contact("", "", "", "", "");
-            ContactControl contactControl = new ContactControl(flowLayoutPanel, contact);
+            ContactControl contactControl = new ContactControl(flowLayoutPanel, contact, );
 
             flowLayoutPanel.Controls.Add(contactControl);
 
             Console.WriteLine("added contact ");
-        }
+        }*/
     }
 }

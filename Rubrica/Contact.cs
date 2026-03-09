@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace AddressBook
@@ -41,7 +42,14 @@ namespace AddressBook
         {
             this.user = new User(username, email, password);
             this.number = number;
-            if(profilePic.Length == 0)this.profilePic = "C:\\Users\\AnzelmoA\\Desktop\\ALFONSO\\User_icon_2.svg.png";
+            //if(profilePic.Length == 0)this.profilePic = "C:\\Users\\AnzelmoA\\Desktop\\ALFONSO\\User_icon_2.svg.png";
+            if (profilePic.Length == 0)
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                Console.WriteLine(Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png")));
+                this.profilePic = Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png"));
+
+            }
             else this.profilePic = profilePic;
 
 
