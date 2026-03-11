@@ -40,8 +40,10 @@ namespace Rubrica
         {
             contactControl.removeMySelf();
             contacts.Remove(contactControl);
-            
+
         }
+
+        
 
     }
 }

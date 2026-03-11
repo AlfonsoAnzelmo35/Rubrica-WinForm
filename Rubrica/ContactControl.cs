@@ -3,8 +3,9 @@ using System;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
+using System.Reflection.Emit;
 using System.Windows.Forms;
-using static System.Windows.Forms.LinkLabel;
+using Label = System.Windows.Forms.Label;
 
 namespace AddressBook
 {
@@ -72,7 +73,20 @@ namespace AddressBook
             
             EnableDrag(this);
             profilePic = addImage(profilePic, contact1.ProfilePic);
-            createLabels();
+     
+
+            Point point = new Point(profilePic.Right + 10, profilePic.Top);
+            Font lblFont = new Font("Segoe UI", 10, FontStyle.Bold);
+            int textX = profilePic.Right + 10;
+            int textY = profilePic.Top;
+            lblName = ShowMyImage.createLabel(contact1.user.username, new Point(textX, textY), lblFont);
+            Controls.Add(lblName);
+            lblEmail = ShowMyImage.createLabel(contact1.user.email, new Point(textX, textY + 22), lblFont);
+            Controls.Add(lblEmail);
+            lblNumber = ShowMyImage.createLabel(contact1.Number, new Point(textX + 120, textY), lblFont);
+            Controls.Add(lblNumber);
+
+
             createBorders();
 
             removePic = addImage(removePic, Path.GetFullPath(Path.Combine(
@@ -140,7 +154,8 @@ namespace AddressBook
             Controls.Remove(line);
         }
 
-        public void createLabels()
+        
+        /*public void createLabels()
         {
             int textX = profilePic.Right + 10;
             int textY = profilePic.Top;
@@ -165,7 +180,7 @@ namespace AddressBook
             lblNumber.AutoSize = true;
             lblNumber.Location = new Point(textX + 120, textY);
             Controls.Add(lblNumber);
-        }
+        }*/
         
         private void ContactControl_MouseEnter(object sender, EventArgs e)
         {
