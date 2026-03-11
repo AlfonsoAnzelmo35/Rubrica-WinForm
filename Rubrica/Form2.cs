@@ -18,6 +18,7 @@ namespace Rubrica
             this.Width = 450;this.Height = 350;
             Console.WriteLine("width height internal dialog box : " + this.Width + " " + this.Height);
             
+
             FlowLayoutPanel flowLayoutPanel11 = new FlowLayoutPanel();
             flowLayoutPanel11.FlowDirection = FlowDirection.LeftToRight;
             flowLayoutPanel11.Dock = DockStyle.Fill;
@@ -29,11 +30,12 @@ namespace Rubrica
             flowLayoutPanel12.WrapContents = false;
             flowLayoutPanel12.Height = flowLayoutPanel11.Height;
             flowLayoutPanel12.BackColor = Color.White;
-            //flowLayoutPanel12.AutoSize = true;
+            flowLayoutPanel12.AutoSize = true;
 
             FlowLayoutPanel flowLayoutPanel13 = new FlowLayoutPanel();
             flowLayoutPanel13.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel13.WrapContents = false;
+            flowLayoutPanel13.AutoSize = true;
             flowLayoutPanel13.BackColor = Color.Black;
             flowLayoutPanel13.Height = flowLayoutPanel11.Height;
 
@@ -69,7 +71,9 @@ namespace Rubrica
             flowLayoutPanel12.Controls.Add(NumebrLabel);
             flowLayoutPanel12.Controls.Add(EmailLabel);
 
-            
+
+            Button button = ShowMyImage.createButton("inserisci contatto ", new Point((int) flowLayoutPanel12.Width / 4, flowLayoutPanel12.Height -20), font);
+            flowLayoutPanel13.Controls.Add(button);
 
         }
 

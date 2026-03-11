@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using TextBox = System.Windows.Forms.TextBox;
+using Button = System.Windows.Forms.Button;
 
 namespace AddressBook
 {
@@ -90,6 +92,21 @@ namespace AddressBook
             return label;
         }
 
+
+        public static Button createButton(string text, Point point, Font font, bool autosize = true)
+        {
+            System.Windows.Forms.Button button = new Button();
+            button.Text = text;
+            button.Font = font;
+
+            if (font == null)
+                font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            button.AutoSize = autosize;
+            button.Location = point;
+
+            return button;
+        }
 
     }
 }

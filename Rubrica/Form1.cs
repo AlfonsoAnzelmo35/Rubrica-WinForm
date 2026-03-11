@@ -40,11 +40,12 @@ namespace AddressBook
             {
                 foreach (Control c in flowLayoutPanel.Controls)
                 {
-                    if(typeof(ContactControl).IsInstanceOfType(c)){
+                    if (typeof(ContactControl).IsInstanceOfType(c))
+                    {
                         ContactControl c1 = (ContactControl)c;
-                        c1.LineRight.Location = new Point(c1.Width - 3, 0);
-                        c1.LineRight.Height = Height;
-                        c1.Width = flowLayoutPanel.ClientSize.Width - c1.Margin.Horizontal;
+                            c1.LineRight.Location = new Point(c1.Width - 3, 0);
+                            c1.LineRight.Height = Height;
+                            c1.Width = flowLayoutPanel.ClientSize.Width - c1.Margin.Horizontal;
                     }
                 }
             };

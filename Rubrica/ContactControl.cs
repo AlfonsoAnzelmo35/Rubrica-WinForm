@@ -1,9 +1,9 @@
 ﻿using Rubrica;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.IO;
-using System.Reflection.Emit;
 using System.Windows.Forms;
 using Label = System.Windows.Forms.Label;
 
@@ -17,6 +17,7 @@ namespace AddressBook
         private Label lblName, lblEmail, lblNumber;
         private string removeContactImage = "";
         private ContactControlWrapper contactControlWrapper;
+        private bool[] visibleborder;
 
         Panel lineTop { get; set; } 
         Panel lineLeft { get; set; }
@@ -70,7 +71,6 @@ namespace AddressBook
             }
             this.MouseDown += ContactControl_MouseDown;
 
-            
             EnableDrag(this);
             profilePic = addImage(profilePic, contact1.ProfilePic);
      
@@ -87,7 +87,12 @@ namespace AddressBook
             Controls.Add(lblNumber);
 
 
-            createBorders();
+            Panel[] panels = createBorders(new Color[] {Color.Yellow, Color.Black, Color.Red, Color.Blue}, new bool [] {false, false, true, false });
+            lineTop     = panels[0];
+            lineBottom  = panels[1];
+            lineLeft    = panels[2];
+            lineRight   = panels[3];
+
 
             removePic = addImage(removePic, Path.GetFullPath(Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory, @"..\..\images\cestino.png")));
@@ -95,46 +100,65 @@ namespace AddressBook
             removePic.Height = 50;removePic.Width= 50;
             removePic.Click += ((s, e) =>
             {
-                Console.WriteLine("clicked remvove button" + this.ToString());
+                Console.WriteLine("clicked remove button" + this.ToString());
                 this.contactControlWrapper.removeContactControl(this);
             });
 
-
         }
 
-        private void createBorders()
+        private Panel[] createBorders(Color[] colors, bool[] borderPresent, int height = 2, int width = 2)
         {
+            Panel[] panels = new Panel[4];
+            visibleborder = new bool[4]{true, true, true, true};
+
             // Linea in alto
-            lineTop = new Panel();
-            lineTop.Height = 2;
-            lineTop.Dock = DockStyle.Top;
-            lineTop.BackColor = Color.Yellow;
-            lineTop.BringToFront();
+            Panel lineTop = new Panel();
+                lineTop.Height = height;
+                lineTop.Dock = DockStyle.Top;
+                lineTop.BackColor = Color.Yellow;
+                lineTop.BringToFront();
+                panels[0] = lineTop;
 
             // Linea in basso
-            lineBottom = new Panel();
-            lineBottom.Height = 2;
-            lineBottom.Dock = DockStyle.Bottom;
-            lineBottom.BackColor = Color.Black;
-            lineBottom.BringToFront();
+            Panel lineBottom = new Panel();
+                lineBottom.Height = height;
+                lineBottom.Dock = DockStyle.Bottom;
+                lineBottom.BackColor = Color.Black;
+                lineBottom.BringToFront();
+                panels[1] = lineBottom;
 
             // Linea a sinistra
-            lineLeft = new Panel();
-            lineLeft.Width = 2;
-            lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height;
-            lineLeft.Location = new Point(0, lineTop.Height);
-            lineLeft.BackColor = Color.Red;
-            lineLeft.BringToFront();
+            Panel lineLeft = new Panel();
+                lineLeft.Width = width;
+                lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height;
+                lineLeft.Location = new Point(0, lineTop.Height);
+                lineLeft.BackColor = Color.Red;
+                lineLeft.BringToFront();
+                panels[2] = lineLeft;
 
             // Linea a destra
-            lineRight = new Panel();
-            lineRight.Width = 2;
-            lineRight.Height = this.Height - lineTop.Height - lineBottom.Height;
-            lineRight.Location = new Point(this.Width - 10, lineTop.Height);
-            lineRight.BackColor = Color.Blue;
-            lineRight.BringToFront();
+            Panel lineRight = new Panel();
+                lineRight.Width = width;
+                lineRight.Height = this.Height - lineTop.Height - lineBottom.Height;
+                lineRight.Location = new Point(this.Width - 10, lineTop.Height);
+                lineRight.BackColor = Color.Blue;
+                lineRight.BringToFront();
+                
+                panels[3] = lineRight;
 
+            int i;
+            for (i = 0; i < borderPresent.Length; i++)
+                if (!borderPresent[i]) {
+                    panels[i].Enabled = false;
+                    panels[i].Visible = false;
+                } else{
+                    panels[i].Visible = true;
+                    panels[i].Enabled = true;
+
+                }
+            return panels;
         }
+
         private PictureBox addImage(PictureBox pic, string profilePic)
         {
             pic = ShowMyImage.ShowImage(profilePic);
@@ -194,10 +218,10 @@ namespace AddressBook
                 lineTop.BringToFront(); // assicurati sia sopra a tutto
                 lineLeft.BringToFront();
             }
-            lineTop.Visible = true;
-            lineLeft.Visible = true;
-            lineRight.Visible = true;
-            lineBottom.Visible = true;
+            if(lineTop.Enabled) lineTop.Visible = true;
+            if (lineLeft.Enabled) lineLeft.Visible = true;
+            if (lineRight.Enabled) lineRight.Visible = true;
+            if (lineBottom.Enabled) lineBottom.Visible = true;
 
         }
 
