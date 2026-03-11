@@ -16,7 +16,7 @@ namespace AddressBook
         private PictureBox profilePic, removePic;
         private Label lblName, lblEmail, lblNumber;
         private string removeContactImage = "";
-        private ContactControlWrapper contactControlWrapper;
+        //private ContactControlWrapper contactControlWrapper;
         private bool[] visibleborder;
 
         Panel lineTop { get; set; } 
@@ -53,10 +53,9 @@ namespace AddressBook
             set { contactControlWidth = value; }
         }
 
-        public ContactControl(FlowLayoutPanel flowLayoutPanel, Contact contact, ContactControlWrapper contactControlWrapper)
+        public ContactControl(FlowLayoutPanel flowLayoutPanel, Contact contact)
         {
             this.contact1 = contact;
-            this.contactControlWrapper = contactControlWrapper;
             this.flowLayoutPanel = flowLayoutPanel;
             this.BorderStyle = BorderStyle.FixedSingle;
             
@@ -72,7 +71,7 @@ namespace AddressBook
             this.MouseDown += ContactControl_MouseDown;
 
             EnableDrag(this);
-            profilePic = addImage(profilePic, contact1.ProfilePic);
+            profilePic = addImage(profilePic, Contact.profilePic);
      
 
             Point point = new Point(profilePic.Right + 10, profilePic.Top);
@@ -101,7 +100,7 @@ namespace AddressBook
             removePic.Click += ((s, e) =>
             {
                 Console.WriteLine("clicked remove button" + this.ToString());
-                this.contactControlWrapper.removeContactControl(this);
+                ContactControlWrapper.removeContactControl(this);
             });
 
         }
@@ -165,47 +164,7 @@ namespace AddressBook
             Controls.Add(pic);
             return pic;
         }
-        private void removeImage(PictureBox pic)
-        {  
-            Controls.Remove(pic);
-        }
-        private void removeLabel(Label label)
-        {
-            Controls.Remove(label);    
-        }
-        private void removeBorder(Panel line)
-        {
-            Controls.Remove(line);
-        }
-
-        
-        /*public void createLabels()
-        {
-            int textX = profilePic.Right + 10;
-            int textY = profilePic.Top;
-
-            lblName = new Label();
-            lblName.Text = contact1.user.username;
-            lblName.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-            lblName.AutoSize = true;
-            lblName.Location = new Point(textX, textY);
-            Controls.Add(lblName);
-
-
-            lblEmail = new Label();
-            lblEmail.Text = contact1.user.email;
-            lblEmail.AutoSize = true;
-            lblEmail.Location = new Point(textX, textY + 22);
-            Controls.Add(lblEmail);
-
-
-             lblNumber = new Label();
-            lblNumber.Text = contact1.Number;
-            lblNumber.AutoSize = true;
-            lblNumber.Location = new Point(textX + 120, textY);
-            Controls.Add(lblNumber);
-        }*/
-        
+       
         private void ContactControl_MouseEnter(object sender, EventArgs e)
         {
             if (!Controls.Contains(lineTop))

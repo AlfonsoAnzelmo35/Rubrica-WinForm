@@ -7,6 +7,16 @@ namespace AddressBook
     public class Contact 
     {
         private int contactImagelength = 20, contactImageWidth = 20;
+
+        private static string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        public static string profilePic = Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png"));
+        private string profilePicCustom; 
+
+        public string ProfilePicCustom
+        {
+            get { return profilePicCustom; }
+            set { profilePicCustom = value; }
+        }
         public int ContactImagelength
         {
             get { return contactImagelength; }
@@ -25,37 +35,26 @@ namespace AddressBook
         }
 
         public User user;
-        
-        
-        private string profilePic;   
-        public string ProfilePic     
-        {
-            get { return profilePic; }
-            set { profilePic = value; }
-        }
 
         private PictureBox pictureBox1 { get; set; }
         
-
-
-        public Contact(string number, string profilePic, string username, string email, string password)
+        public Contact(string number,  string username, string email, string password)
         {
             this.user = new User(username, email, password);
             this.number = number;
-            //if(profilePic.Length == 0)this.profilePic = "C:\\Users\\AnzelmoA\\Desktop\\ALFONSO\\User_icon_2.svg.png";
-            if (profilePic.Length == 0)
-            {
-                string basePath = AppDomain.CurrentDomain.BaseDirectory;
-                Console.WriteLine(Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png")));
-                this.profilePic = Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png"));
-
-            }
-            else this.profilePic = profilePic;
-
-
             this.user.username = username;
             this.user.email = email;
             this.user.password = password;
+
+        }
+        public Contact(string number, string username, string email, string password, string profilePicCustom)
+        {
+            this.user = new User(username, email, password);
+            this.number = number;
+            this.user.username = username;
+            this.user.email = email;
+            this.user.password = password;
+            this.profilePicCustom = profilePicCustom;
 
         }
 
@@ -83,6 +82,4 @@ namespace AddressBook
         }
 
     }
-
-
 }

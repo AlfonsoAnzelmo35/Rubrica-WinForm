@@ -51,9 +51,6 @@ namespace Rubrica
 
         }
 
-
-       
-
         private void AddItem_Click(object sender, EventArgs e)
         {
             Console.WriteLine("add contact was clicked");
@@ -67,7 +64,7 @@ namespace Rubrica
 
         private void openNewWindow()
         {
-            Form form2 = new Form2();
+            Form form2 = new Form2(flowLayoutPanel);
             form2.ShowDialog();
         }
     }
