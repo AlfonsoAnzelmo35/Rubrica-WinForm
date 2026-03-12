@@ -75,6 +75,13 @@ namespace Rubrica
         {
             Console.WriteLine("Sorting by name");
             ContactControlWrapper.contacts.Sort(new ContactControlUsernameComparer());
+
+            flowLayoutPanel.Controls.Clear();
+
+            int i;
+            for (i = 0; i < ContactControlWrapper.contacts.Count; i++)
+                flowLayoutPanel.Controls.Add(ContactControlWrapper.contacts[i]);
+            
             Console.WriteLine(ContactControlWrapper.toString());
         }
         private void doSortByEmail(object sender, EventArgs e)
