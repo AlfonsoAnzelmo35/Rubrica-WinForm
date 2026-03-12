@@ -51,8 +51,7 @@ namespace AddressBook
         {
             public int Compare(ContactControl x, ContactControl y)
             {
-               
-                return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
+               return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
             }
         }
 
@@ -60,7 +59,7 @@ namespace AddressBook
         {
             public int Compare(ContactControl x, ContactControl y)
             {
-                return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
+                return new Contact.EmailComparer().Compare(x.Contact1, y.Contact1);
             }
         }
         public int ContactControlHeight

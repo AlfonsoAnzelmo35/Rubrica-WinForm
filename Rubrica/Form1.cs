@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace AddressBook
@@ -52,13 +51,13 @@ namespace AddressBook
             //Once the FlowLayoutPanel control is ready with its properties, the next step is to add the FlowLayoutPanel to a Form
             this.Controls.Add(flowLayoutPanel);
 
-            Contact contact1 = new Contact("11111113333333", "ZAniello", "anz@45.it", "pass");
+            Contact contact1 = new Contact("11111113333333", "ZAniello", "a@45.it", "pass");
             ContactControl contactControl1 = new ContactControl(flowLayoutPanel, contact1);
 
-            Contact contact2 = new Contact("2222222",  "Alfonso", "anz@45.it", "pass");
+            Contact contact2 = new Contact("2222222",  "Alfonso", "bQuaglia@45.it", "pass");
             ContactControl contactControl2 = new ContactControl(flowLayoutPanel, contact2);
 
-            Contact contact3 = new Contact("3333333", "Fabio", "anz@45.it", "pass");
+            Contact contact3 = new Contact("3333333", "Fabio", "c@45.it", "pass");
             ContactControl contactControl3 = new ContactControl(flowLayoutPanel, contact3);
 
             ContactControlWrapper.addConcatControl(contactControl1, flowLayoutPanel);

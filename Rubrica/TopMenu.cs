@@ -47,7 +47,7 @@ namespace Rubrica
             contactsMenu.DropDownItems.Add(optionsItem);
 
             sortByName.Click += doSortByName;
-            sortByEmail.Click += doSortByName;
+            sortByEmail.Click += doSortByEmail;
 
 
             menuStrip.Items.Add(contactsMenu);
@@ -88,6 +88,13 @@ namespace Rubrica
         {
             Console.WriteLine("Sorting by email");
             ContactControlWrapper.contacts.Sort(new ContactControEmailComparer());
+
+            flowLayoutPanel.Controls.Clear();
+
+            int i;
+            for (i = 0; i < ContactControlWrapper.contacts.Count; i++)
+                flowLayoutPanel.Controls.Add(ContactControlWrapper.contacts[i]);
+
             Console.WriteLine(ContactControlWrapper.toString());
         }
     }
