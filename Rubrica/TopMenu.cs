@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static AddressBook.ContactControl;
 
 namespace Rubrica
 {
@@ -40,14 +41,19 @@ namespace Rubrica
             optionsItem = new ToolStripMenuItem("Options");
             sortByName = new ToolStripMenuItem("Sort by Name");
             sortByEmail = new ToolStripMenuItem("Sort by Email");
-            optionsItem.DropDownItems.Add("Sort by Name");
-            optionsItem.DropDownItems.Add("Sort by Email");
+
+            optionsItem.DropDownItems.Add(sortByName);
+            optionsItem.DropDownItems.Add(sortByEmail);
             contactsMenu.DropDownItems.Add(optionsItem);
-            
+
+            sortByName.Click += doSortByName;
+            sortByEmail.Click += doSortByName;
+
 
             menuStrip.Items.Add(contactsMenu);
 
             addItem.Click += AddItem_Click;
+            
 
         }
 
@@ -55,9 +61,6 @@ namespace Rubrica
         {
             Console.WriteLine("add contact was clicked");
             openNewWindow();
-            //Contact contact = new Contact("", "", "", "", "");
-            //ContactControl contactControl = new ContactControl(flowLayoutPanel, contact, );
-            //flowLayoutPanel.Controls.Add(contactControl);
 
             Console.WriteLine("added contact ");
         }
@@ -66,6 +69,19 @@ namespace Rubrica
         {
             Form form2 = new Form2(flowLayoutPanel);
             form2.ShowDialog();
+        }
+
+        private void doSortByName(object sender, EventArgs e)
+        {
+            Console.WriteLine("Sorting by name");
+            ContactControlWrapper.contacts.Sort(new ContactControlUsernameComparer());
+            Console.WriteLine(ContactControlWrapper.toString());
+        }
+        private void doSortByEmail(object sender, EventArgs e)
+        {
+            Console.WriteLine("Sorting by email");
+            ContactControlWrapper.contacts.Sort(new ContactControEmailComparer());
+            Console.WriteLine(ContactControlWrapper.toString());
         }
     }
 }

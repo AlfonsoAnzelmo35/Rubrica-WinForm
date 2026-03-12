@@ -12,12 +12,10 @@ namespace AddressBook
     public class ContactControl: UserControl
     {
         private FlowLayoutPanel flowLayoutPanel;
-        private TextBox textBox;
         private PictureBox profilePic, removePic;
         private Label lblName, lblEmail, lblNumber;
-        private string removeContactImage = "";
+        
         //private ContactControlWrapper contactControlWrapper;
-        private bool[] visibleborder;
 
         Panel lineTop { get; set; } 
         Panel lineLeft { get; set; }
@@ -40,8 +38,31 @@ namespace AddressBook
         private bool showShadow = false;
 
         private Contact contact1;
+
+        public Contact Contact1
+        {
+            get { return contact1;  }
+            set { contact1 = value; }
+        }
         private int contactControlHeight = 80;
         private int contactControlWidth = 200;
+
+        public class ContactControlUsernameComparer : IComparer<ContactControl>
+        {
+            public int Compare(ContactControl x, ContactControl y)
+            {
+               
+                return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
+            }
+        }
+
+        public class ContactControEmailComparer : IComparer<ContactControl>
+        {
+            public int Compare(ContactControl x, ContactControl y)
+            {
+                return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
+            }
+        }
         public int ContactControlHeight
         {
             get { return contactControlHeight; }
@@ -78,9 +99,9 @@ namespace AddressBook
             Font lblFont = new Font("Segoe UI", 10, FontStyle.Bold);
             int textX = profilePic.Right + 10;
             int textY = profilePic.Top;
-            lblName = ShowMyImage.createLabel(contact1.user.username, new Point(textX, textY), lblFont);
+            lblName = ShowMyImage.createLabel(contact1.user.Username, new Point(textX, textY), lblFont);
             Controls.Add(lblName);
-            lblEmail = ShowMyImage.createLabel(contact1.user.email, new Point(textX, textY + 22), lblFont);
+            lblEmail = ShowMyImage.createLabel(contact1.user.Email, new Point(textX, textY + 22), lblFont);
             Controls.Add(lblEmail);
             lblNumber = ShowMyImage.createLabel(contact1.Number, new Point(textX + 120, textY), lblFont);
             Controls.Add(lblNumber);
@@ -108,7 +129,6 @@ namespace AddressBook
         private Panel[] createBorders(Color[] colors, bool[] borderPresent, int height = 2, int width = 2)
         {
             Panel[] panels = new Panel[4];
-            visibleborder = new bool[4]{true, true, true, true};
 
             // Linea in alto
             Panel lineTop = new Panel();
@@ -233,10 +253,17 @@ namespace AddressBook
             this.ResumeLayout(false);
 
         }
-
+        
         private void ContactControl_Load(object sender, EventArgs e)
         {
 
         }
+
+        public string toString()
+        {
+            return this.contact1.toString();
+
+        }
+        
     }
 }

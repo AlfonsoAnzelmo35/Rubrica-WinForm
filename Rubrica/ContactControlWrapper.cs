@@ -1,5 +1,6 @@
 ﻿using AddressBook;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Rubrica
@@ -14,7 +15,6 @@ namespace Rubrica
             contacts.Add(contactControl);
 
             flowLayoutPanel.Controls.Add(contactControl);
-            //contactControl.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
         }
         public static void addConcatControl(string number, string filePic, string name, string email, string password, FlowLayoutPanel flowLayoutPanel)
         {
@@ -25,16 +25,26 @@ namespace Rubrica
             flowLayoutPanel.Controls.Add(contactControl);
             //contactControl.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
 
+
+
         }
 
         public static void removeContactControl(ContactControl contactControl)
         {
             contactControl.removeMySelf();
             contacts.Remove(contactControl);
-
         }
-
-        
+        public static string toString()
+        {
+            string p = string.Empty;
+            foreach (ContactControl cc in contacts)
+                p += cc.toString();
+            return p;
+        }
+        public static void doSortByName()
+        {
+            
+        }
 
     }
 }

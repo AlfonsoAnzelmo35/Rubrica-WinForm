@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -42,28 +43,43 @@ namespace AddressBook
         {
             this.user = new User(username, email, password);
             this.number = number;
-            this.user.username = username;
-            this.user.email = email;
-            this.user.password = password;
+            this.user.Username = username;
+            this.user.Email = email;
+            this.user.Password = password;
 
         }
         public Contact(string number, string username, string email, string password, string profilePicCustom)
         {
             this.user = new User(username, email, password);
             this.number = number;
-            this.user.username = username;
-            this.user.email = email;
-            this.user.password = password;
+            this.user.Username = username;
+            this.user.Email = email;
+            this.user.Password = password;
             this.profilePicCustom = profilePicCustom;
 
         }
 
         public class User
         {
-            public string username { get; set; }
-            public string email { get; set; }
-            public string password { get; set; }
+            private string username { get; set; }
+            private string email { get; set; }
+            private string password { get; set; }
 
+            public string Username
+            {
+                get { return username; }
+                set { username = value; }
+            }
+            public string Email
+            {
+                get { return email; }
+                set { email = value; }
+            }
+            public string Password
+            {
+                get { return password; }
+                set { password = value; }
+            }
 
             public User(string username, string email, string password)
             {
@@ -74,12 +90,32 @@ namespace AddressBook
             }
 
         }
+
+
+        public class UsernameComparer : IComparer<Contact>
+        {
+            public int Compare(Contact x, Contact y)
+            {
+                return string.Compare(x.user.Username, y.user.Username);
+            }
+        }
+
+        public class EmailComparer : IComparer<Contact>
+        {
+            public int Compare(Contact x, Contact y)
+            {
+                return string.Compare(x.user.Email, y.user.Email);
+            }
+        }
+
+
         public String toString()
         {
-            Console.WriteLine($"I am : {user.username} with {user.email}. My number is {this.number}");
+            Console.WriteLine($"I am : {user.Username} with {user.Email}. My number is {this.Number}");
            
             return "I am : {user.username} with {user.email}. My number is";
         }
 
+      
     }
 }
