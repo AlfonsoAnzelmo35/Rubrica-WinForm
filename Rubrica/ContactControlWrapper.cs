@@ -38,7 +38,7 @@ namespace Rubrica
         {
             string p = string.Empty;
             foreach (ContactControl cc in contacts)
-                p += cc.toString();
+                p += cc.toString()+ "\n";
             return p;
         }
         public static void doSortByName()

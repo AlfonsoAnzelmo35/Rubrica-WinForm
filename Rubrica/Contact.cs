@@ -113,7 +113,7 @@ namespace AddressBook
         {
             Console.WriteLine($"I am : {user.Username} with {user.Email}. My number is {this.Number}");
            
-            return "I am : {user.username} with {user.email}. My number is";
+            return $"I am : {user.Username} with {user.Email}. My number is {this.Number}";
         }
 
       

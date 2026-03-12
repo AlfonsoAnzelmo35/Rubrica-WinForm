@@ -1,6 +1,7 @@
 ﻿using AddressBook;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,15 @@ namespace Rubrica
             set { menuStrip = value; }
         }
 
+
+
         ToolStripMenuItem contactsMenu { get; set; }
         ToolStripMenuItem addItem { get; set; }
-        ToolStripMenuItem reomveItem { get; set; }
         ToolStripMenuItem optionsItem { get; set; }
         ToolStripMenuItem sortByName { get; set; }
         ToolStripMenuItem sortByEmail { get; set; }
+        ToolStripMenuItem saveContacts { get; set; }
+
 
         public TopMenu(FlowLayoutPanel flowLayoutPanel)
         {
@@ -32,7 +36,6 @@ namespace Rubrica
             menuStrip = new MenuStrip();
             contactsMenu = new ToolStripMenuItem("Contacts");
             addItem = new ToolStripMenuItem("Add Contact");
-            reomveItem = new ToolStripMenuItem("Remove Contact");
 
             contactsMenu.DropDownItems.Add(addItem);
             contactsMenu.DropDownItems.Add(reomveItem);
@@ -41,13 +44,19 @@ namespace Rubrica
             optionsItem = new ToolStripMenuItem("Options");
             sortByName = new ToolStripMenuItem("Sort by Name");
             sortByEmail = new ToolStripMenuItem("Sort by Email");
+            saveContacts = new ToolStripMenuItem("Save in File");
+
 
             optionsItem.DropDownItems.Add(sortByName);
             optionsItem.DropDownItems.Add(sortByEmail);
+            optionsItem.DropDownItems.Add(saveContacts);
+
             contactsMenu.DropDownItems.Add(optionsItem);
 
             sortByName.Click += doSortByName;
             sortByEmail.Click += doSortByEmail;
+            saveContacts.Click += saveContactsInFile;
+
 
 
             menuStrip.Items.Add(contactsMenu);
@@ -97,5 +106,18 @@ namespace Rubrica
 
             Console.WriteLine(ContactControlWrapper.toString());
         }
+
+        private void saveContactsInFile(object sender, EventArgs e)
+        {
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string path = Path.GetFullPath(Path.Combine(basePath, @"..\..\contacts.txt"));
+
+            
+
+            File.WriteAllText(path, ContactControlWrapper.toString());
+            string data = File.ReadAllText(path);
+
+        }
+
     }
 }
