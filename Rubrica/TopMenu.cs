@@ -3,10 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static AddressBook.ContactControl;
+using static System.Windows.Forms.LinkLabel;
 
 namespace Rubrica
 {
@@ -21,8 +24,9 @@ namespace Rubrica
         }
 
 
-
+        ToolStripMenuItem FileMenu { get; set; }
         ToolStripMenuItem contactsMenu { get; set; }
+        ToolStripMenuItem importContacts { get; set; }
         ToolStripMenuItem addItem { get; set; }
         ToolStripMenuItem optionsItem { get; set; }
         ToolStripMenuItem sortByName { get; set; }
@@ -34,35 +38,42 @@ namespace Rubrica
         {
             this.flowLayoutPanel = flowLayoutPanel;
             menuStrip = new MenuStrip();
+
+            //contactsMenu
             contactsMenu = new ToolStripMenuItem("Contacts");
+
             addItem = new ToolStripMenuItem("Add Contact");
-
             contactsMenu.DropDownItems.Add(addItem);
-            contactsMenu.DropDownItems.Add(reomveItem);
-
 
             optionsItem = new ToolStripMenuItem("Options");
             sortByName = new ToolStripMenuItem("Sort by Name");
             sortByEmail = new ToolStripMenuItem("Sort by Email");
-            saveContacts = new ToolStripMenuItem("Save in File");
 
 
             optionsItem.DropDownItems.Add(sortByName);
             optionsItem.DropDownItems.Add(sortByEmail);
-            optionsItem.DropDownItems.Add(saveContacts);
 
             contactsMenu.DropDownItems.Add(optionsItem);
 
+            addItem.Click += AddItem_Click;
             sortByName.Click += doSortByName;
             sortByEmail.Click += doSortByEmail;
-            saveContacts.Click += saveContactsInFile;
-
-
 
             menuStrip.Items.Add(contactsMenu);
 
-            addItem.Click += AddItem_Click;
-            
+            //File Menu
+            FileMenu = new ToolStripMenuItem("File");
+
+            saveContacts = new ToolStripMenuItem("Save in File");
+            importContacts = new ToolStripMenuItem("Import From File");
+            FileMenu.DropDownItems.Add(saveContacts);
+            FileMenu.DropDownItems.Add(importContacts);
+
+
+            menuStrip.Items.Add(FileMenu);
+
+            saveContacts.Click += saveContactsInFile;
+            importContacts.Click += importContactsFromFile;
 
         }
 
@@ -85,39 +96,69 @@ namespace Rubrica
             Console.WriteLine("Sorting by name");
             ContactControlWrapper.contacts.Sort(new ContactControlUsernameComparer());
 
-            flowLayoutPanel.Controls.Clear();
+            updateUI();
 
-            int i;
-            for (i = 0; i < ContactControlWrapper.contacts.Count; i++)
-                flowLayoutPanel.Controls.Add(ContactControlWrapper.contacts[i]);
-            
-            Console.WriteLine(ContactControlWrapper.toString());
         }
         private void doSortByEmail(object sender, EventArgs e)
         {
             Console.WriteLine("Sorting by email");
             ContactControlWrapper.contacts.Sort(new ContactControEmailComparer());
 
+            updateUI();
+
+        }
+        private void updateUI()
+        {
             flowLayoutPanel.Controls.Clear();
 
             int i;
-            for (i = 0; i < ContactControlWrapper.contacts.Count; i++)
+            for (i = 0; i < ContactControlWrapper.contacts.Count; i++){
                 flowLayoutPanel.Controls.Add(ContactControlWrapper.contacts[i]);
-
+            }
             Console.WriteLine(ContactControlWrapper.toString());
         }
-
         private void saveContactsInFile(object sender, EventArgs e)
         {
             string basePath = AppDomain.CurrentDomain.BaseDirectory;
-            string path = Path.GetFullPath(Path.Combine(basePath, @"..\..\contacts.txt"));
+            string path = Path.GetFullPath(Path.Combine(basePath, @"..\..\contacts.json"));
+            string contactControlWrapper_jsonString = String.Empty;
 
+            List<User> users = new List<User>();
+            foreach (ContactControl cc in ContactControlWrapper.contacts){
+
+                User user = new User(cc.Contact1.user.Username, cc.Contact1.user.Email, cc.Contact1.user.Password);
+                user.Number = cc.Contact1.Number;
+
+                users.Add(user);
+            }
+            contactControlWrapper_jsonString = JsonSerializer.Serialize(users);
+
+            File.WriteAllText(path, contactControlWrapper_jsonString);
             
 
-            File.WriteAllText(path, ContactControlWrapper.toString());
-            string data = File.ReadAllText(path);
-
         }
+        private void importContactsFromFile(object sender, EventArgs e)
+        {
+            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            string path = Path.GetFullPath(Path.Combine(basePath, @"..\..\contacts.json"));
 
+            ContactControlWrapper.contacts.Clear();
+
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                List<User> users = JsonSerializer.Deserialize<List<User>>(json);
+
+                foreach (User user in users)
+                {
+
+                    Contact contact = new Contact(user.Number, user.Username, user.Email, user.Password);
+
+                    ContactControl cc = new ContactControl(flowLayoutPanel, contact);
+                    ContactControlWrapper.addConcatControl(cc, flowLayoutPanel);
+                }
+            }
+            updateUI();
+        }
     }
 }

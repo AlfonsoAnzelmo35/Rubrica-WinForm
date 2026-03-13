@@ -1,4 +1,5 @@
 ﻿using AddressBook;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -24,9 +25,6 @@ namespace Rubrica
 
             flowLayoutPanel.Controls.Add(contactControl);
             //contactControl.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
-
-
-
         }
 
         public static void removeContactControl(ContactControl contactControl)

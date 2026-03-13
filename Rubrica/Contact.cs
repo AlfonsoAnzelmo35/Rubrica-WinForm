@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace AddressBook
 {
@@ -38,7 +40,7 @@ namespace AddressBook
         public User user;
 
         private PictureBox pictureBox1 { get; set; }
-        
+        public Contact() { }
         public Contact(string number,  string username, string email, string password)
         {
             this.user = new User(username, email, password);
@@ -46,6 +48,12 @@ namespace AddressBook
             this.user.Username = username;
             this.user.Email = email;
             this.user.Password = password;
+
+        }
+        public Contact(Contact contact)
+        {
+            this.number = number;
+            this.user = new User(contact.user.Username, contact.user.Email, contact.user.Password);
 
         }
         public Contact(string number, string username, string email, string password, string profilePicCustom)
@@ -59,38 +67,7 @@ namespace AddressBook
 
         }
 
-        public class User
-        {
-            private string username { get; set; }
-            private string email { get; set; }
-            private string password { get; set; }
-
-            public string Username
-            {
-                get { return username; }
-                set { username = value; }
-            }
-            public string Email
-            {
-                get { return email; }
-                set { email = value; }
-            }
-            public string Password
-            {
-                get { return password; }
-                set { password = value; }
-            }
-
-            public User(string username, string email, string password)
-            {
-                this.username = username;
-                this.email = email;
-                this.password = password;
-
-            }
-
-        }
-
+       
 
         public class UsernameComparer : IComparer<Contact>
         {
