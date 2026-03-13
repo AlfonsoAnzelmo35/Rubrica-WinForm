@@ -14,7 +14,8 @@ namespace AddressBook
         private FlowLayoutPanel flowLayoutPanel;
         private PictureBox profilePic, removePic;
         private Label lblName, lblEmail, lblNumber;
-    
+        private TextBox textBoxForModifing;
+        private Button buttonForModifing;
         Panel lineTop { get; set; } 
         Panel lineLeft { get; set; }
         Panel lineRight { get; set; }
@@ -47,7 +48,6 @@ namespace AddressBook
                return new Contact.UsernameComparer().Compare(x.Contact1, y.Contact1);
             }
         }
-
         public class ContactControEmailComparer : IComparer<ContactControl>
         {
             public int Compare(ContactControl x, ContactControl y)
@@ -76,9 +76,11 @@ namespace AddressBook
             this.Width = flowLayoutPanel.ClientSize.Width - this.Margin.Horizontal;
             this.MouseEnter += ContactControl_MouseEnter;
             this.MouseLeave += ContactControl_MouseLeave;
+            this.DoubleClick += removeModifingContact;
 
             foreach (Control c in this.Controls)
             {
+                c.DoubleClick += removeModifingContact;
                 c.MouseDown += ContactControl_MouseDown;
             }
             this.MouseDown += ContactControl_MouseDown;
@@ -91,12 +93,17 @@ namespace AddressBook
             Font lblFont = new Font("Segoe UI", 10, FontStyle.Bold);
             int textX = profilePic.Right + 10;
             int textY = profilePic.Top;
+            
             lblName = ShowMyImage.createLabel(contact1.user.Username, new Point(textX, textY), lblFont);
-            Controls.Add(lblName);
             lblEmail = ShowMyImage.createLabel(contact1.user.Email, new Point(textX, textY + 22), lblFont);
-            Controls.Add(lblEmail);
             lblNumber = ShowMyImage.createLabel(contact1.Number, new Point(textX + 120, textY), lblFont);
+            Controls.Add(lblName);
+            Controls.Add(lblEmail);
             Controls.Add(lblNumber);
+
+            lblName.Click += (s,e) => modifyContact(s,e, "name");
+            lblEmail.Click += (s, e) => modifyContact(s, e, "email");
+            lblNumber.Click += (s, e) => modifyContact(s, e, "number");
 
 
             Panel[] panels = ShowMyImage.createBorders(this, new Color[] {Color.Yellow, Color.Black, Color.Red, Color.Blue}, new bool [] {false, false, true, false });
@@ -115,9 +122,57 @@ namespace AddressBook
                 Console.WriteLine("clicked remove button" + this.ToString());
                 ContactControlWrapper.removeContactControl(this);
             });
-
         }
 
+        private void modifyContact(object sender, EventArgs e, string field)
+        {
+            Label label = (Label)sender;
+            Controls.Remove(label);
+
+            TextBox textBoxForModifing = new TextBox();
+            textBoxForModifing.Font = label.Font;
+            textBoxForModifing.Location = label.Location;
+            textBoxForModifing.Size = label.Size;
+            textBoxForModifing.Text = label.Text;
+            Controls.Add(textBoxForModifing);
+
+            Button buttonForModifing = new Button();
+            buttonForModifing.Location = new Point(label.Location.X, label.Location.Y + 25);
+            buttonForModifing.Size = label.Size;
+            buttonForModifing.Text = "Modify";
+            Controls.Add(buttonForModifing);
+
+            buttonForModifing.Click += (s, ev) =>
+            {
+                switch (field)
+                {
+                    case "name":
+                        this.contact1.user.Username = textBoxForModifing.Text;
+                        label.Text = this.contact1.user.Username;
+                        break;
+
+                    case "email":
+                        this.contact1.user.Email = textBoxForModifing.Text;
+                        label.Text = this.contact1.user.Email;
+                        break;
+
+                    case "number":
+                        this.contact1.user.Number = textBoxForModifing.Text;
+                        label.Text = this.contact1.user.Number;
+                        break;
+                }
+
+                Controls.Add(label);
+                Controls.Remove(textBoxForModifing);
+                Controls.Remove(buttonForModifing);
+            };
+        }
+
+        private void removeModifingContact(object sender, EventArgs e)
+        {
+            Controls.Remove(textBoxForModifing);
+            Controls.Remove(buttonForModifing);
+        }
         private PictureBox addImage(PictureBox pic, string profilePic)
         {
             pic = ShowMyImage.ShowImage(profilePic);
@@ -149,7 +204,6 @@ namespace AddressBook
             lineRight.Visible = false;
             lineBottom.Visible = false;
         }
-
         private void ContactControl_MouseDown(object sender, MouseEventArgs e)
         {
             DoDragDrop(this, DragDropEffects.Move);
@@ -222,5 +276,6 @@ namespace AddressBook
 
         }
         
+       
     }
 }

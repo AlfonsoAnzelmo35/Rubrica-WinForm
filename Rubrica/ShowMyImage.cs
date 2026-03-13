@@ -88,6 +88,9 @@ namespace AddressBook
                 font = new Font("Segoe UI", 10, FontStyle.Bold);
             label.AutoSize = autosize;
             label.Location = point;
+            label.Cursor = Cursors.Hand;
+
+
 
             return label;
         }
