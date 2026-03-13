@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -12,13 +13,12 @@ namespace AddressBook
         private int contactImagelength = 20, contactImageWidth = 20;
 
         private static string basePath = AppDomain.CurrentDomain.BaseDirectory;
-        public static string profilePic = Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png"));
-        private string profilePicCustom; 
+        public string profilePic = Path.GetFullPath(Path.Combine(basePath, @"..\..\images\User_icon_2.svg.png"));
 
-        public string ProfilePicCustom
+        public string ProfilePic
         {
-            get { return profilePicCustom; }
-            set { profilePicCustom = value; }
+            get { return profilePic; }
+            set { profilePic = value; }
         }
         public int ContactImagelength
         {
@@ -41,6 +41,11 @@ namespace AddressBook
 
         private PictureBox pictureBox1 { get; set; }
         public Contact() { }
+        public Contact( string number, string filePic, string name, string email, string password){
+            this.user = new User(name, email, password);
+            this.number = number;
+            this.ProfilePic = filePic;
+        }
         public Contact(string number,  string username, string email, string password)
         {
             this.user = new User(username, email, password);
@@ -56,17 +61,6 @@ namespace AddressBook
             this.user = new User(contact.user.Username, contact.user.Email, contact.user.Password);
 
         }
-        public Contact(string number, string username, string email, string password, string profilePicCustom)
-        {
-            this.user = new User(username, email, password);
-            this.number = number;
-            this.user.Username = username;
-            this.user.Email = email;
-            this.user.Password = password;
-            this.profilePicCustom = profilePicCustom;
-
-        }
-
        
 
         public class UsernameComparer : IComparer<Contact>

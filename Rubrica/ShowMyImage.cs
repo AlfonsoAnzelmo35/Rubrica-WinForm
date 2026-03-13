@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using TextBox = System.Windows.Forms.TextBox;
 using Button = System.Windows.Forms.Button;
 
@@ -36,10 +34,13 @@ namespace AddressBook
 
             Console.WriteLine("" + pictureBox1.Location.X, pictureBox1.Location.Y);
             pictureBox1.Location = new Point(pictureBox1.Location.X +25 , pictureBox1.Location.Y+25);
+            pictureBox1.Cursor = Cursors.Hand;
+
+            
             return pictureBox1;
         }
 
-     
+        
 
         public static TextBox createTextBox(string text, Font font, int width = 300, int heigt = 200) {
             TextBox textBox = new TextBox();
@@ -69,7 +70,6 @@ namespace AddressBook
                 textBox.ForeColor = Color.Black;
             }
         }
-
         public static void textBox1_Leave(object sender, EventArgs e, string text)
         {
             TextBox textBox = (TextBox)sender;
@@ -91,8 +91,6 @@ namespace AddressBook
 
             return label;
         }
-
-
         public static Button createButton(string text, Point point, Font font, bool autosize = true)
         {
             System.Windows.Forms.Button button = new Button();
@@ -107,6 +105,59 @@ namespace AddressBook
 
             return button;
         }
+        public static Panel[] createBorders(ContactControl cc, Color[] colors, bool[] borderPresent, int height = 2, int width = 2)
+        {
+            Panel[] panels = new Panel[4];
 
+            // Linea in alto
+            Panel lineTop = new Panel();
+            lineTop.Height = height;
+            lineTop.Dock = DockStyle.Top;
+            lineTop.BackColor = Color.Yellow;
+            lineTop.BringToFront();
+            panels[0] = lineTop;
+
+            // Linea in basso
+            Panel lineBottom = new Panel();
+            lineBottom.Height = height;
+            lineBottom.Dock = DockStyle.Bottom;
+            lineBottom.BackColor = Color.Black;
+            lineBottom.BringToFront();
+            panels[1] = lineBottom;
+
+            // Linea a sinistra
+            Panel lineLeft = new Panel();
+            lineLeft.Width = width;
+            lineLeft.Height = cc.Height - lineTop.Height - lineBottom.Height;
+            lineLeft.Location = new Point(0, lineTop.Height);
+            lineLeft.BackColor = Color.Red;
+            lineLeft.BringToFront();
+            panels[2] = lineLeft;
+
+            // Linea a destra
+            Panel lineRight = new Panel();
+            lineRight.Width = width;
+            lineRight.Height = cc.Height - lineTop.Height - lineBottom.Height;
+            lineRight.Location = new Point(cc.Width - 10, lineTop.Height);
+            lineRight.BackColor = Color.Blue;
+            lineRight.BringToFront();
+
+            panels[3] = lineRight;
+
+            int i;
+            for (i = 0; i < borderPresent.Length; i++)
+                if (!borderPresent[i])
+                {
+                    panels[i].Enabled = false;
+                    panels[i].Visible = false;
+                }
+                else
+                {
+                    panels[i].Visible = true;
+                    panels[i].Enabled = true;
+
+                }
+            return panels;
+        }
     }
 }

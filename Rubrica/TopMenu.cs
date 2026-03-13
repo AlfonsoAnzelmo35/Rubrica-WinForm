@@ -128,7 +128,7 @@ namespace Rubrica
 
                 User user = new User(cc.Contact1.user.Username, cc.Contact1.user.Email, cc.Contact1.user.Password);
                 user.Number = cc.Contact1.Number;
-
+                user.profilePic = cc.Contact1.profilePic;
                 users.Add(user);
             }
             contactControlWrapper_jsonString = JsonSerializer.Serialize(users);
@@ -153,6 +153,7 @@ namespace Rubrica
                 {
 
                     Contact contact = new Contact(user.Number, user.Username, user.Email, user.Password);
+                    contact.profilePic = user.profilePic;
 
                     ContactControl cc = new ContactControl(flowLayoutPanel, contact);
                     ContactControlWrapper.addConcatControl(cc, flowLayoutPanel);

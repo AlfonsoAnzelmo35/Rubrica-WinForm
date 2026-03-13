@@ -14,13 +14,10 @@ namespace AddressBook
         private FlowLayoutPanel flowLayoutPanel;
         private PictureBox profilePic, removePic;
         private Label lblName, lblEmail, lblNumber;
-        
-        //private ContactControlWrapper contactControlWrapper;
-
+    
         Panel lineTop { get; set; } 
         Panel lineLeft { get; set; }
         Panel lineRight { get; set; }
-        public 
         Panel lineBottom { get; set; }
 
         public Panel LineRight
@@ -28,17 +25,13 @@ namespace AddressBook
             get { return lineRight; }
             set { lineRight = value; }
         }
-
         public Panel LineLeft
         {
             get { return lineLeft; }
             set { lineLeft = value; }
         }
-
         private bool showShadow = false;
-
         private Contact contact1;
-
         public Contact Contact1
         {
             get { return contact1;  }
@@ -91,8 +84,8 @@ namespace AddressBook
             this.MouseDown += ContactControl_MouseDown;
 
             EnableDrag(this);
-            profilePic = addImage(profilePic, Contact.profilePic);
-     
+            profilePic = addImage(profilePic, this.contact1.ProfilePic);
+            profilePic.Click += selectProfilePic;
 
             Point point = new Point(profilePic.Right + 10, profilePic.Top);
             Font lblFont = new Font("Segoe UI", 10, FontStyle.Bold);
@@ -106,7 +99,7 @@ namespace AddressBook
             Controls.Add(lblNumber);
 
 
-            Panel[] panels = createBorders(new Color[] {Color.Yellow, Color.Black, Color.Red, Color.Blue}, new bool [] {false, false, true, false });
+            Panel[] panels = ShowMyImage.createBorders(this, new Color[] {Color.Yellow, Color.Black, Color.Red, Color.Blue}, new bool [] {false, false, true, false });
             lineTop     = panels[0];
             lineBottom  = panels[1];
             lineLeft    = panels[2];
@@ -125,65 +118,12 @@ namespace AddressBook
 
         }
 
-        private Panel[] createBorders(Color[] colors, bool[] borderPresent, int height = 2, int width = 2)
-        {
-            Panel[] panels = new Panel[4];
-
-            // Linea in alto
-            Panel lineTop = new Panel();
-                lineTop.Height = height;
-                lineTop.Dock = DockStyle.Top;
-                lineTop.BackColor = Color.Yellow;
-                lineTop.BringToFront();
-                panels[0] = lineTop;
-
-            // Linea in basso
-            Panel lineBottom = new Panel();
-                lineBottom.Height = height;
-                lineBottom.Dock = DockStyle.Bottom;
-                lineBottom.BackColor = Color.Black;
-                lineBottom.BringToFront();
-                panels[1] = lineBottom;
-
-            // Linea a sinistra
-            Panel lineLeft = new Panel();
-                lineLeft.Width = width;
-                lineLeft.Height = this.Height - lineTop.Height - lineBottom.Height;
-                lineLeft.Location = new Point(0, lineTop.Height);
-                lineLeft.BackColor = Color.Red;
-                lineLeft.BringToFront();
-                panels[2] = lineLeft;
-
-            // Linea a destra
-            Panel lineRight = new Panel();
-                lineRight.Width = width;
-                lineRight.Height = this.Height - lineTop.Height - lineBottom.Height;
-                lineRight.Location = new Point(this.Width - 10, lineTop.Height);
-                lineRight.BackColor = Color.Blue;
-                lineRight.BringToFront();
-                
-                panels[3] = lineRight;
-
-            int i;
-            for (i = 0; i < borderPresent.Length; i++)
-                if (!borderPresent[i]) {
-                    panels[i].Enabled = false;
-                    panels[i].Visible = false;
-                } else{
-                    panels[i].Visible = true;
-                    panels[i].Enabled = true;
-
-                }
-            return panels;
-        }
-
         private PictureBox addImage(PictureBox pic, string profilePic)
         {
             pic = ShowMyImage.ShowImage(profilePic);
             Controls.Add(pic);
             return pic;
         }
-       
         private void ContactControl_MouseEnter(object sender, EventArgs e)
         {
             if (!Controls.Contains(lineTop))
@@ -202,7 +142,6 @@ namespace AddressBook
             if (lineBottom.Enabled) lineBottom.Visible = true;
 
         }
-
         private void ContactControl_MouseLeave(object sender, EventArgs e)
         {
             lineTop.Visible = false;
@@ -228,7 +167,29 @@ namespace AddressBook
                 EnableDrag(c);
             }
         }
+        public  void selectProfilePic(object sender, EventArgs e)
+        {
+            string path = String.Empty;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image Files|*";
 
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                string ext = Path.GetExtension(ofd.FileName).ToLower();
+
+                if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".bmp")
+                {
+                    this.contact1.ProfilePic = ofd.FileName;
+                    Controls.Remove(profilePic);
+                    addImage(profilePic, ofd.FileName);
+                }
+                else
+                {
+                    MessageBox.Show("Not supported file format.");
+                }
+            }
+
+        }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -240,7 +201,6 @@ namespace AddressBook
             this.Parent.Controls.Remove(this);
             this.Dispose();
         }
-
         private void InitializeComponent()
         {
             this.SuspendLayout();
@@ -252,12 +212,10 @@ namespace AddressBook
             this.ResumeLayout(false);
 
         }
-        
         private void ContactControl_Load(object sender, EventArgs e)
         {
 
         }
-
         public string toString()
         {
             return this.contact1.toString();
