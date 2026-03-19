@@ -1,9 +1,6 @@
-﻿using AddressBook;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace AddressBook
 {
@@ -12,6 +9,15 @@ namespace AddressBook
         private string username { get; set; }
         private string email { get; set; }
         private string password { get; set; }
+        private DateTime birthDay { get; set; }
+        public DateTime BirthDay
+        {
+            get { return birthDay; }
+            set { birthDay = value; }
+        }
+
+        public  User() { }
+
 
         public string Username
         {
@@ -35,7 +41,21 @@ namespace AddressBook
             this.email = email;
             this.password = password;
         }
+        public User(string username, string email, string password, string birthDay)
+        {
+            this.username = username;
+            this.email = email;
+            this.password = password;
+            this.birthDay = User.StringToDatetime(birthDay, new CultureInfo("it-IT"));
+        }
 
+
+
+        public static DateTime StringToDatetime(string birthday, CultureInfo culture)
+        {
+            //new CultureInfo("de-DE")
+            return DateTime.ParseExact(birthday, "dd/MM/yyyy", culture);
+        }
     }
 
 }

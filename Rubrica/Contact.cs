@@ -41,10 +41,14 @@ namespace AddressBook
 
         private PictureBox pictureBox1 { get; set; }
         public Contact() { }
-        public Contact( string number, string filePic, string name, string email, string password){
-            this.user = new User(name, email, password);
+       
+        public Contact(string number, string username, string email, string password, string birthDay)
+        {
+            this.user = new User(username, email, password, birthDay);
             this.number = number;
-            this.ProfilePic = filePic;
+            this.user.Username = username;
+            this.user.Email = email;
+            this.user.Password = password;
         }
         public Contact(string number,  string username, string email, string password)
         {

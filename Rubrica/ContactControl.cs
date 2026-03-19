@@ -1,8 +1,8 @@
 ﻿using Rubrica;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Label = System.Windows.Forms.Label;
@@ -13,7 +13,7 @@ namespace AddressBook
     {
         private FlowLayoutPanel flowLayoutPanel;
         private PictureBox profilePic, removePic;
-        private Label lblName, lblEmail, lblNumber;
+        private Label lblName, lblEmail, lblNumber,lblBirthDay;
         private TextBox textBoxForModifing;
         private Button buttonForModifing;
         Panel lineTop { get; set; } 
@@ -97,13 +97,19 @@ namespace AddressBook
             lblName = ShowMyImage.createLabel(contact1.user.Username, new Point(textX, textY), lblFont);
             lblEmail = ShowMyImage.createLabel(contact1.user.Email, new Point(textX, textY + 22), lblFont);
             lblNumber = ShowMyImage.createLabel(contact1.Number, new Point(textX + 120, textY), lblFont);
+
+            lblBirthDay = ShowMyImage.createLabel(contact1.user.BirthDay.ToString(), new Point(textX + 120, textY +22), lblFont);
+
             Controls.Add(lblName);
             Controls.Add(lblEmail);
             Controls.Add(lblNumber);
+            Controls.Add(lblBirthDay);
+
 
             lblName.Click += (s,e) => modifyContact(s,e, "name");
             lblEmail.Click += (s, e) => modifyContact(s, e, "email");
             lblNumber.Click += (s, e) => modifyContact(s, e, "number");
+            lblBirthDay.Click += (s, e) => modifyContact(s, e, "birthDay");
 
 
             Panel[] panels = ShowMyImage.createBorders(this, new Color[] {Color.Yellow, Color.Black, Color.Red, Color.Blue}, new bool [] {false, false, true, false });
@@ -158,6 +164,12 @@ namespace AddressBook
 
                     case "number":
                         this.contact1.user.Number = textBoxForModifing.Text;
+                        label.Text = this.contact1.user.Number;
+                        break;
+
+                    case "birthDay":
+                        
+                        this.contact1.user.BirthDay = User.StringToDatetime(field, new CultureInfo("it-IT")); 
                         label.Text = this.contact1.user.Number;
                         break;
                 }
